@@ -1,9 +1,0 @@
-# CrewAI (incluye tools y LLM providers)
-crewai[tools]>=1.12.2
-
-# Data Processing (usado por CSVProfilerTool del crew)
-pandas>=2.0.0
-numpy>=1.24.0
-
-# Environment
-python-dotenv>=1.0.0

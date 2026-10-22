@@ -6,8 +6,18 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool, FileWriterTool
 
-import agentops #**********************************************************
-agentops.init() #**********************************************************
+#================================ LANGFUSE ===============================
+# Lee LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY y LANGFUSE_BASE_URL del .env
+from langfuse import get_client
+from openinference.instrumentation.crewai import CrewAIInstrumentor
+from openinference.instrumentation.litellm import LiteLLMInstrumentor
+
+langfuse = get_client()
+
+# CrewAI -> spans de Crew, Agente, Tarea y Tool (latencia de cada uno)
+CrewAIInstrumentor().instrument(skip_dep_check=True)
+# LiteLLM -> generaciones con modelo y tokens (Langfuse calcula el costo)
+LiteLLMInstrumentor().instrument()
 
 serper = SerperDevTool() #TAVILY
 scraper = ScrapeWebsiteTool() #APIfy

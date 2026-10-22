@@ -4,7 +4,7 @@ import warnings
 
 from datetime import datetime
 
-from proyecto_a_multiagente_ejemplo.crew import ProyectoAMultiagenteEjemplo
+from proyecto_a_multiagente_gemini.crew import ProyectoAMultiagenteGemini
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -23,7 +23,7 @@ def run():
     }
 
     try:
-        ProyectoAMultiagenteEjemplo().crew().kickoff(inputs=inputs)
+        ProyectoAMultiagenteGemini().crew().kickoff(inputs=inputs)
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 
@@ -37,7 +37,7 @@ def train():
         'current_year': str(datetime.now().year)
     }
     try:
-        ProyectoAMultiagenteEjemplo().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+        ProyectoAMultiagenteGemini().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
@@ -47,7 +47,7 @@ def replay():
     Replay the crew execution from a specific task.
     """
     try:
-        ProyectoAMultiagenteEjemplo().crew().replay(task_id=sys.argv[1])
+        ProyectoAMultiagenteGemini().crew().replay(task_id=sys.argv[1])
 
     except Exception as e:
         raise Exception(f"An error occurred while replaying the crew: {e}")
@@ -62,7 +62,7 @@ def test():
     }
 
     try:
-        ProyectoAMultiagenteEjemplo().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
+        ProyectoAMultiagenteGemini().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
@@ -88,7 +88,7 @@ def run_with_trigger():
     }
 
     try:
-        result = ProyectoAMultiagenteEjemplo().crew().kickoff(inputs=inputs)
+        result = ProyectoAMultiagenteGemini().crew().kickoff(inputs=inputs)
         return result
     except Exception as e:
         raise Exception(f"An error occurred while running the crew with trigger: {e}")

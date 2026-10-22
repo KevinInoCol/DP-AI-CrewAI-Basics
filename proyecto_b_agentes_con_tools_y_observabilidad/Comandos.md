@@ -10,12 +10,20 @@ cd proyecto_b_agentes_con_tools_y_observabilidad
 
 ```bash
 uv venv --prompt CrewAI-Tools-Observabilidad
+
+o
+
+conda create -n CrewAI-Agentes python=3.12
 ```
 
 ## 2. Activar el entorno virtual
 
 ```bash
 source .venv/bin/activate
+
+o
+
+conda activate CrewAI-Agentes
 ```
 
 ## 3. Instalar las dependencias

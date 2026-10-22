@@ -6,8 +6,8 @@ from crewai.agents.agent_builder.base_agent import BaseAgent
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
 @CrewBase
-class ProyectoAMultiagenteEjemplo():
-    """ProyectoAMultiagenteEjemplo crew"""
+class ProyectoAMultiagenteOpenai():
+    """ProyectoAMultiagenteOpenai crew"""
 
     agents: list[BaseAgent]
     tasks: list[Task]
@@ -32,6 +32,20 @@ class ProyectoAMultiagenteEjemplo():
             verbose=True
         )
 
+    @agent
+    def hugo_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['hugo_agent'], # type: ignore[index]
+            verbose=True
+        )
+
+    @agent
+    def angel_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['angel_agent'], # type: ignore[index]
+            verbose=True
+        )
+
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
@@ -50,7 +64,7 @@ class ProyectoAMultiagenteEjemplo():
 
     @crew
     def crew(self) -> Crew:
-        """Creates the ProyectoAMultiagenteEjemplo crew"""
+        """Creates the ProyectoAMultiagenteOpenai crew"""
         # To learn how to add knowledge sources to your crew, check out the documentation:
         # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
 

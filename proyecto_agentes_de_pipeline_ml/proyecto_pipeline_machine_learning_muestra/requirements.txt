@@ -1,0 +1,29 @@
+# Requirements para los notebooks de proyecto_pipeline_machine_learning_muestra
+# Probado en Python 3.11. PyCaret 3.3.x solo funciona en Python 3.9-3.11.
+
+# Datos
+feature-engine~=1.4.1
+joblib~=1.2.0
+numpy~=1.26.4
+pandas~=2.1.4
+scipy~=1.11.4
+
+# Visualización
+matplotlib~=3.7.5
+seaborn~=0.13.2
+
+# Machine Learning
+scikit-learn~=1.4.2
+
+# AutoML
+pycaret~=3.3.1
+
+# Entorno de notebooks
+ipykernel~=7.4.0
+
+# Paquetes opcionales usados solo en bloques try/except:
+# torch (solo si necesitas reproducir exactitud al fijar semillas): pip install torch
+
+# Advertencias de los notebooks (no afectan dependencies):
+# from feature_engine.transformation import LogTransformer, YeoJohnsonTransformer, SklearnTransformerWrapper -> ImportError: cannot import name 'SklearnTransformerWrapper' from 'feature_engine.transformation'
+# from feature_engine.indicator import AddMissingIndicator -> ModuleNotFoundError: No module named 'feature_engine.indicator'

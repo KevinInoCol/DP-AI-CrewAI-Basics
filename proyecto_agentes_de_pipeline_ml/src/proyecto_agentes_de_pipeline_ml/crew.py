@@ -1,11 +1,13 @@
 from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
+from crewai.project import CrewBase, agent, before_kickoff, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 
 from proyecto_agentes_de_pipeline_ml.tools.csv_profiler_tool import CSVProfilerTool
 from proyecto_agentes_de_pipeline_ml.tools.notebook_writer_tool import NotebookWriterTool
 from proyecto_agentes_de_pipeline_ml.tools.file_reader_tool import FileReaderTool
+from proyecto_agentes_de_pipeline_ml.tools.requirements_scanner_tool import RequirementsScannerTool
+from proyecto_agentes_de_pipeline_ml.tools.requirements_validator_tool import RequirementsValidatorTool, guardrail_requirements
 
 
 @CrewBase
@@ -91,6 +93,22 @@ class ProyectoAgentesDePipelineMl():
             verbose=True
         )
 
+    @agent
+    def requirements_engineer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['requirements_engineer'],  # type: ignore[index]
+            tools=[RequirementsScannerTool(), RequirementsValidatorTool()],
+            verbose=True
+        )
+
+    # --- Inputs ---
+
+    @before_kickoff
+    def guardar_inputs(self, inputs):
+        """Guarda los inputs para que el guardrail de requirements sepa qué carpeta validar."""
+        self.inputs = inputs
+        return inputs
+
     # --- Tareas ---
 
     @task
@@ -169,6 +187,16 @@ class ProyectoAgentesDePipelineMl():
                 self.scoring_task(),
                 self.final_pipeline_task(),
             ]
+        )
+
+    @task
+    def requirements_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['requirements_task'],  # type: ignore[index]
+            output_file='{output_folder}/requirements.txt',
+            # Rechaza el archivo si no se instala o si fallan los imports de los notebooks
+            guardrail=lambda resultado: guardrail_requirements(resultado, self.inputs['output_folder']),
+            guardrail_max_retries=3,
         )
 
     # --- Crew ---

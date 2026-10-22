@@ -586,3 +586,55 @@ code_review_task:
     - 07-Scoring-new-data.ipynb: OK o lista de errores encontrados y corregidos
     - 08-Machine-Learning-Pipeline.ipynb: OK o lista de errores encontrados y corregidos
   agent: code_reviewer
+
+requirements_task:
+  description: >
+    Diseña el requirements.txt para los notebooks de {output_folder}.
+
+    PASO 1 — ESCANEO:
+    Usa el Requirements Scanner Tool sobre la carpeta {output_folder}. Te devuelve
+    cada paquete de terceros importado, su nombre en PyPI, si es obligatorio u
+    OPCIONAL (importado dentro de un try/except ImportError) y en qué notebooks se usa.
+    No agregues ningún paquete que no aparezca en el escaneo, salvo ipykernel.
+
+    PASO 2 — PRIMERA PROPUESTA (SIN VERSIONES):
+    - Incluye todos los paquetes obligatorios con su nombre de PyPI
+      (ej. scikit-learn, no sklearn; feature-engine, no feature_engine).
+    - Agrega ipykernel para poder ejecutar los notebooks en Jupyter o VS Code.
+    - NO incluyas los paquetes OPCIONALES; menciónalos solo en un comentario
+      (ej. torch, si únicamente se usa para fijar semillas).
+    - NO pongas versiones: deja que el resolvedor elija la combinación compatible.
+      Única excepción: si los notebooks usan pycaret, escribe pycaret>=3.3,<4
+      (los notebooks usan la API de PyCaret 3, como RegressionExperiment).
+
+    PASO 3 — VALIDACIÓN (OBLIGATORIA):
+    Usa el Requirements Validator Tool con tu propuesta, folder_path {output_folder}
+    y python_version "3.11". La herramienta instala el requirements en un entorno
+    temporal y ejecuta los imports reales de los notebooks (tarda alrededor de un
+    minuto).
+    - Si devuelve OK, incluye un "Bloque de dependencias sugerido" con rangos ~=
+      construidos a partir de las versiones que se instalaron y funcionaron.
+      USA ESE BLOQUE TAL CUAL como dependencias del archivo final.
+    - Si devuelve CONFLICTO, cambia solo lo que indica el error (ej. si falta un
+      nombre como root_mean_squared_error, sube el mínimo de ese paquete) y
+      vuelve a validar. NUNCA escribas versiones de memoria.
+    - Las "Advertencias" son errores de ruta dentro de los notebooks: no se
+      arreglan en el requirements; cópialas como comentario al final del archivo.
+    La salida final se valida automáticamente y se rechaza si no funciona.
+
+    PASO 4 — ENTREGA:
+    Tu respuesta final es EXCLUSIVAMENTE el contenido del archivo, sin bloques
+    de código markdown (```), con este formato:
+    - Comentario de cabecera: para qué notebooks es y que requiere Python 3.9-3.11
+      si se usa PyCaret (PyCaret 3.3.x no funciona en Python 3.12 o superior).
+    - Las dependencias del bloque sugerido, agrupadas con comentarios (# Datos,
+      # Visualización, # Machine Learning, # AutoML, # Entorno de notebooks),
+      una por línea, sin cambiar ninguna versión.
+    - Al final, los paquetes opcionales comentados con la instrucción para
+      instalarlos y las advertencias de los notebooks como comentarios.
+  expected_output: >
+    El contenido completo de un requirements.txt válido, sin markdown, que se
+    instala en Python 3.11 y con el que funcionan los imports de los notebooks
+    de {output_folder} (validado con el Requirements Validator Tool). Incluye solo
+    los paquetes que importan los notebooks, más ipykernel.
+  agent: requirements_engineer

@@ -101,4 +101,5 @@ class CrearPublicacionBlogConHerramientas():
 			tasks=self.tasks,    # Creado automáticamente por el decorador @task
 			process=Process.sequential,
 			verbose=True,
+			tracing=True,  # Tracing propio de CrewAI (AMP); convive con Langfuse
 		)
